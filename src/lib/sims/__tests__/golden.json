@@ -1,0 +1,783 @@
+{
+  "oferta-demanda": {
+    "metrics": [
+      {
+        "label": "Precio de equilibrio",
+        "value": "$64.29",
+        "note": "Donde oferta iguala demanda."
+      },
+      {
+        "label": "Cantidad de equilibrio",
+        "value": "486",
+        "note": "Unidades transadas por periodo."
+      },
+      {
+        "label": "Ingreso total",
+        "value": "$31,224",
+        "note": "Precio × cantidad."
+      },
+      {
+        "label": "Excedente del consumidor",
+        "value": "$14,745",
+        "note": "Valor que el comprador captura."
+      },
+      {
+        "label": "Excedente del productor",
+        "value": "$15,612",
+        "note": "Margen sobre el precio mínimo aceptable."
+      },
+      {
+        "label": "Recaudación fiscal",
+        "value": "$0",
+        "note": "Sin impuesto aplicado."
+      }
+    ],
+    "chartTitle": "Curvas de oferta y demanda",
+    "chartNote": "Cantidad en el eje horizontal, precio en el vertical. El cruce es el equilibrio.",
+    "controls": [
+      {
+        "label": "a — demanda máxima (unidades)",
+        "min": 400,
+        "max": 2000,
+        "step": 20,
+        "value": 1000,
+        "display": "1,000",
+        "help": "Cuánto se compraría a precio cero."
+      },
+      {
+        "label": "b — sensibilidad de la demanda",
+        "min": 2,
+        "max": 30,
+        "step": 0.5,
+        "value": 8,
+        "display": "8.0",
+        "help": "Unidades perdidas por cada $1 de aumento."
+      },
+      {
+        "label": "c — oferta autónoma (unidades)",
+        "min": 0,
+        "max": 600,
+        "step": 10,
+        "value": 100,
+        "display": "100",
+        "help": "Producción que existe aun a precio bajo."
+      },
+      {
+        "label": "d — sensibilidad de la oferta",
+        "min": 1,
+        "max": 30,
+        "step": 0.5,
+        "value": 6,
+        "display": "6.0",
+        "help": "Reacción de los productores a un mejor precio."
+      },
+      {
+        "label": "t — impuesto por unidad ($)",
+        "min": 0,
+        "max": 40,
+        "step": 1,
+        "value": 0,
+        "display": "$0",
+        "help": "Se suma al costo del productor: desplaza la oferta."
+      }
+    ],
+    "legend": [
+      {
+        "label": "Demanda",
+        "color": "#201e1d"
+      },
+      {
+        "label": "Oferta (con impuesto)",
+        "color": "#ec3013"
+      }
+    ]
+  },
+  "interes-compuesto": {
+    "metrics": [
+      {
+        "label": "Saldo final nominal",
+        "value": "$1,455,957",
+        "note": "Al cierre del año 20."
+      },
+      {
+        "label": "Total aportado",
+        "value": "$500,000",
+        "note": "Capital inicial más aportes."
+      },
+      {
+        "label": "Interés generado",
+        "value": "$955,957",
+        "note": "66% del saldo final."
+      },
+      {
+        "label": "Saldo en pesos de hoy",
+        "value": "$664,480",
+        "note": "Ajustado por inflación."
+      },
+      {
+        "label": "Tasa efectiva anual",
+        "value": "9.38%",
+        "note": "Efecto de capitalizar 12 veces al año."
+      },
+      {
+        "label": "Duplica el capital en",
+        "value": "8.0 años",
+        "note": "Regla del 72, sin aportes."
+      }
+    ],
+    "chartTitle": "Trayectoria del capital",
+    "chartNote": "El área sombreada es dinero aportado; la distancia hasta la curva superior es interés generado.",
+    "controls": [
+      {
+        "label": "P₀ — capital inicial",
+        "min": 0,
+        "max": 500000,
+        "step": 5000,
+        "value": 20000,
+        "display": "$20,000",
+        "help": "Punto de partida de la inversión."
+      },
+      {
+        "label": "A — aporte mensual",
+        "min": 0,
+        "max": 20000,
+        "step": 250,
+        "value": 2000,
+        "display": "$2,000",
+        "help": "Ahorro periódico constante."
+      },
+      {
+        "label": "r — tasa nominal anual (%)",
+        "min": 0,
+        "max": 25,
+        "step": 0.25,
+        "value": 9,
+        "display": "9.00%",
+        "help": "Rendimiento antes de capitalizar."
+      },
+      {
+        "label": "m — capitalizaciones por año",
+        "min": 1,
+        "max": 12,
+        "step": 1,
+        "value": 12,
+        "display": "12",
+        "help": "1 = anual, 12 = mensual."
+      },
+      {
+        "label": "n — plazo (años)",
+        "min": 1,
+        "max": 40,
+        "step": 1,
+        "value": 20,
+        "display": "20",
+        "help": "La palanca más poderosa del modelo."
+      },
+      {
+        "label": "Inflación anual (%)",
+        "min": 0,
+        "max": 15,
+        "step": 0.25,
+        "value": 4,
+        "display": "4.00%",
+        "help": "Descuenta el saldo a poder de compra de hoy."
+      }
+    ],
+    "legend": [
+      {
+        "label": "Saldo nominal",
+        "color": "#ec3013"
+      },
+      {
+        "label": "Saldo real (hoy)",
+        "color": "#201e1d"
+      },
+      {
+        "label": "Aportado",
+        "color": "#9b9797"
+      }
+    ]
+  },
+  "eoq": {
+    "metrics": [
+      {
+        "label": "EOQ óptimo",
+        "value": "1,111 u",
+        "note": "Donde el costo de pedir iguala el de mantener."
+      },
+      {
+        "label": "Pedidos por año",
+        "value": "21.6",
+        "note": "Un ciclo cada 17 días."
+      },
+      {
+        "label": "Costo total óptimo",
+        "value": "$38,884",
+        "note": "Sin contar el costo de compra."
+      },
+      {
+        "label": "Costo con su lote actual",
+        "value": "$41,500",
+        "note": "Con Q = 1,600 unidades."
+      },
+      {
+        "label": "Sobrecosto por no optimizar",
+        "value": "$2,616",
+        "note": "+6.7% sobre el mínimo."
+      },
+      {
+        "label": "Inventario promedio",
+        "value": "555 u",
+        "note": "Capital inmovilizado: $19,442/año de costo."
+      }
+    ],
+    "chartTitle": "Costo anual según el tamaño de lote",
+    "chartNote": "La curva total es plana alrededor del óptimo: hay margen para redondear a empaque o camión completo.",
+    "controls": [
+      {
+        "label": "D — demanda anual (unidades)",
+        "min": 1000,
+        "max": 100000,
+        "step": 1000,
+        "value": 24000,
+        "display": "24,000",
+        "help": "Volumen que se venderá en el año."
+      },
+      {
+        "label": "S — costo por pedido ($)",
+        "min": 50,
+        "max": 5000,
+        "step": 50,
+        "value": 900,
+        "display": "$900",
+        "help": "Flete, gestión e inspección por orden."
+      },
+      {
+        "label": "H — costo de mantener ($/unidad/año)",
+        "min": 2,
+        "max": 200,
+        "step": 1,
+        "value": 35,
+        "display": "$35",
+        "help": "Almacén, seguro, merma y costo del capital."
+      },
+      {
+        "label": "Q — lote que usa hoy (unidades)",
+        "min": 100,
+        "max": 10000,
+        "step": 50,
+        "value": 1600,
+        "display": "1,600",
+        "help": "Para medir la penalización de no estar en el óptimo."
+      }
+    ],
+    "legend": [
+      {
+        "label": "Costo total",
+        "color": "#ec3013"
+      },
+      {
+        "label": "Mantener",
+        "color": "#201e1d"
+      },
+      {
+        "label": "Pedir",
+        "color": "#9b9797"
+      }
+    ]
+  },
+  "punto-reorden": {
+    "metrics": [
+      {
+        "label": "Punto de reorden",
+        "value": "428 u",
+        "note": "d̄·L = 350 + colchón 78."
+      },
+      {
+        "label": "Inventario de seguridad",
+        "value": "78 u",
+        "note": "z = 1.64 para 95.0% de servicio."
+      },
+      {
+        "label": "Costo del colchón",
+        "value": "1.6 días",
+        "note": "Días de venta inmovilizados."
+      },
+      {
+        "label": "Inventario promedio",
+        "value": "450 u",
+        "note": "Sobre la simulación de 180 días."
+      },
+      {
+        "label": "Unidades no surtidas",
+        "value": "0 u",
+        "note": "Fill rate 100.00%."
+      },
+      {
+        "label": "Ciclos con faltante",
+        "value": "0 de 12",
+        "note": "Reposiciones que llegaron tarde."
+      }
+    ],
+    "chartTitle": "Inventario simulado, 180 días",
+    "chartNote": "Cada caída es demanda diaria aleatoria; cada salto es la llegada de un pedido.",
+    "controls": [
+      {
+        "label": "d̄ — demanda diaria promedio",
+        "min": 5,
+        "max": 200,
+        "step": 5,
+        "value": 50,
+        "display": "50",
+        "help": "Unidades por día."
+      },
+      {
+        "label": "σ — desviación de la demanda diaria",
+        "min": 0,
+        "max": 80,
+        "step": 1,
+        "value": 18,
+        "display": "18",
+        "help": "La incertidumbre: es lo que obliga a tener colchón."
+      },
+      {
+        "label": "L — tiempo de entrega (días)",
+        "min": 1,
+        "max": 30,
+        "step": 1,
+        "value": 7,
+        "display": "7",
+        "help": "El riesgo crece con √L."
+      },
+      {
+        "label": "Nivel de servicio (%)",
+        "min": 80,
+        "max": 99.5,
+        "step": 0.5,
+        "value": 95,
+        "display": "95.0%",
+        "help": "Probabilidad de no agotarse durante la entrega."
+      }
+    ],
+    "legend": [
+      {
+        "label": "Inventario",
+        "color": "#201e1d"
+      },
+      {
+        "label": "Punto de reorden",
+        "color": "#ec3013"
+      }
+    ]
+  },
+  "revision": {
+    "metrics": [
+      {
+        "label": "Continua · inv. promedio",
+        "value": "457 u",
+        "note": "12 pedidos en 180 días."
+      },
+      {
+        "label": "Periódica · inv. promedio",
+        "value": "544 u",
+        "note": "13 pedidos en 180 días."
+      },
+      {
+        "label": "Inventario extra de la periódica",
+        "value": "87 u",
+        "note": "19% más capital inmovilizado."
+      },
+      {
+        "label": "Colchón continua",
+        "value": "78 u",
+        "note": "z·σ·√L."
+      },
+      {
+        "label": "Colchón periódica",
+        "value": "136 u",
+        "note": "z·σ·√(T+L)."
+      },
+      {
+        "label": "Fill rate",
+        "value": "100.0% / 100.0%",
+        "note": "Continua / periódica."
+      }
+    ],
+    "chartTitle": "Las dos políticas sobre la misma demanda",
+    "chartNote": "La periódica queda ciega T días, por eso necesita navegar más alto para dar el mismo servicio.",
+    "controls": [
+      {
+        "label": "d̄ — demanda diaria promedio",
+        "min": 5,
+        "max": 200,
+        "step": 5,
+        "value": 50,
+        "display": "50",
+        "help": "Igual para ambas políticas."
+      },
+      {
+        "label": "σ — desviación diaria",
+        "min": 0,
+        "max": 80,
+        "step": 1,
+        "value": 18,
+        "display": "18",
+        "help": "Misma serie aleatoria en las dos."
+      },
+      {
+        "label": "L — tiempo de entrega (días)",
+        "min": 1,
+        "max": 21,
+        "step": 1,
+        "value": 7,
+        "display": "7",
+        "help": "Retraso del proveedor."
+      },
+      {
+        "label": "T — periodo de revisión (días)",
+        "min": 3,
+        "max": 45,
+        "step": 1,
+        "value": 14,
+        "display": "14",
+        "help": "Sólo aplica a la política periódica."
+      },
+      {
+        "label": "Q — lote fijo de la continua",
+        "min": 100,
+        "max": 3000,
+        "step": 50,
+        "value": 700,
+        "display": "700",
+        "help": "Normalmente el EOQ."
+      },
+      {
+        "label": "Nivel de servicio (%)",
+        "min": 80,
+        "max": 99.5,
+        "step": 0.5,
+        "value": 95,
+        "display": "95.0%",
+        "help": "Mismo objetivo para ambas."
+      }
+    ],
+    "legend": [
+      {
+        "label": "Continua (s,Q)",
+        "color": "#201e1d"
+      },
+      {
+        "label": "Periódica (R,T)",
+        "color": "#ec3013"
+      }
+    ]
+  },
+  "efecto-latigo": {
+    "metrics": [
+      {
+        "label": "Minorista",
+        "value": "2.53×",
+        "note": "Pico de 201 u contra demanda media de 115."
+      },
+      {
+        "label": "Mayorista",
+        "value": "7.72×",
+        "note": "Pico de 418 u contra demanda media de 115."
+      },
+      {
+        "label": "Distribuidor",
+        "value": "16.79×",
+        "note": "Pico de 811 u contra demanda media de 115."
+      },
+      {
+        "label": "Fábrica",
+        "value": "29.42×",
+        "note": "Pico de 1,442 u contra demanda media de 115."
+      },
+      {
+        "label": "CV de la demanda final",
+        "value": "9.6%",
+        "note": "Variabilidad de origen."
+      },
+      {
+        "label": "Amplificación total",
+        "value": "29.42×",
+        "note": "Lo que ve la fábrica frente al mostrador."
+      }
+    ],
+    "chartTitle": "Pedidos por eslabón, 52 semanas",
+    "chartNote": "La línea punteada es la demanda real del consumidor. Cuanto más arriba en la cadena, más violenta la oscilación.",
+    "controls": [
+      {
+        "label": "σ — variabilidad de la demanda final",
+        "min": 0,
+        "max": 40,
+        "step": 1,
+        "value": 8,
+        "display": "8",
+        "help": "Ruido semanal del consumidor."
+      },
+      {
+        "label": "Salto de demanda en la semana 10",
+        "min": 0,
+        "max": 60,
+        "step": 5,
+        "value": 20,
+        "display": "20",
+        "help": "Cambio permanente de nivel."
+      },
+      {
+        "label": "L — retraso entre eslabones (semanas)",
+        "min": 1,
+        "max": 6,
+        "step": 1,
+        "value": 2,
+        "display": "2",
+        "help": "El combustible del látigo."
+      },
+      {
+        "label": "α — reactividad del pronóstico",
+        "min": 0.05,
+        "max": 1,
+        "step": 0.05,
+        "value": 0.6,
+        "display": "0.60",
+        "help": "Alto = cree cada dato reciente y sobrerreacciona."
+      },
+      {
+        "label": "z — agresividad del colchón",
+        "min": 0,
+        "max": 3,
+        "step": 0.1,
+        "value": 1.6,
+        "display": "1.6",
+        "help": "Protección adicional que pide cada eslabón."
+      }
+    ],
+    "legend": [
+      {
+        "label": "Demanda final",
+        "color": "#201e1d"
+      },
+      {
+        "label": "Minorista",
+        "color": "#605d5d"
+      },
+      {
+        "label": "Mayorista",
+        "color": "#9b9797"
+      },
+      {
+        "label": "Distribuidor",
+        "color": "#ec3013"
+      },
+      {
+        "label": "Fábrica",
+        "color": "#ae1800"
+      }
+    ]
+  },
+  "beer-game": {
+    "metrics": [
+      {
+        "label": "Semana actual",
+        "value": "8",
+        "note": "Use los botones para avanzar el juego."
+      },
+      {
+        "label": "Costo total de la cadena",
+        "value": "$413",
+        "note": "$1 por inventario, $2 por pendiente y semana."
+      },
+      {
+        "label": "Pedido de la fábrica",
+        "value": "15 u",
+        "note": "Contra demanda real de 16 u."
+      },
+      {
+        "label": "Backlog máximo",
+        "value": "23 u",
+        "note": "Peor faltante visto en la cadena."
+      },
+      {
+        "label": "Costo del minorista",
+        "value": "$77",
+        "note": "El más cercano al cliente."
+      },
+      {
+        "label": "Costo de la fábrica",
+        "value": "$166",
+        "note": "El más lejano: paga la amplificación."
+      }
+    ],
+    "chartTitle": "Posición neta por eslabón — semana 8",
+    "chartNote": "Por debajo de cero son pedidos pendientes (backlog), que cuestan el doble que el inventario.",
+    "controls": [
+      {
+        "label": "Demanda base del consumidor (u/semana)",
+        "min": 2,
+        "max": 30,
+        "step": 1,
+        "value": 8,
+        "display": "8",
+        "help": "Pedido semanal estable al inicio."
+      },
+      {
+        "label": "Salto de demanda en la semana 5",
+        "min": 0,
+        "max": 30,
+        "step": 1,
+        "value": 8,
+        "display": "8",
+        "help": "El shock que desata el juego."
+      },
+      {
+        "label": "Retraso de envío (semanas)",
+        "min": 1,
+        "max": 5,
+        "step": 1,
+        "value": 2,
+        "display": "2",
+        "help": "Semanas entre pedir y recibir."
+      },
+      {
+        "label": "β — agresividad de corrección",
+        "min": 0,
+        "max": 1.5,
+        "step": 0.05,
+        "value": 0.5,
+        "display": "0.50",
+        "help": "Fracción de la brecha que corrige en un solo pedido."
+      },
+      {
+        "label": "Inventario objetivo (u)",
+        "min": 0,
+        "max": 80,
+        "step": 2,
+        "value": 24,
+        "display": "24",
+        "help": "El colchón que cada eslabón quiere mantener."
+      }
+    ],
+    "legend": [
+      {
+        "label": "Minorista",
+        "color": "#605d5d"
+      },
+      {
+        "label": "Mayorista",
+        "color": "#9b9797"
+      },
+      {
+        "label": "Distribuidor",
+        "color": "#ec3013"
+      },
+      {
+        "label": "Fábrica",
+        "color": "#ae1800"
+      }
+    ]
+  },
+  "colas": {
+    "metrics": [
+      {
+        "label": "Utilización ρ",
+        "value": "94.4%",
+        "note": "Zona crítica: cualquier variación explota la fila."
+      },
+      {
+        "label": "Espera en fila (Wq)",
+        "value": "26.9 min",
+        "note": "Antes de ser atendido."
+      },
+      {
+        "label": "Tiempo total en el sistema",
+        "value": "31.9 min",
+        "note": "Espera más servicio."
+      },
+      {
+        "label": "Personas en fila (Lq)",
+        "value": "15.2",
+        "note": "Longitud promedio de la cola."
+      },
+      {
+        "label": "Probabilidad de esperar",
+        "value": "90%",
+        "note": "Clientes que no pasan directo."
+      },
+      {
+        "label": "Rendimiento del proceso",
+        "value": "30 u/h",
+        "note": "Lo fija la etapa 2; ampliar otra etapa no sube nada."
+      }
+    ],
+    "chartTitle": "Espera en fila contra utilización",
+    "chartNote": "La curva es no lineal: pasada la zona del 85 % la espera se dispara con cualquier llegada extra.",
+    "controls": [
+      {
+        "label": "λ — llegadas por hora",
+        "min": 1,
+        "max": 90,
+        "step": 1,
+        "value": 34,
+        "display": "34",
+        "help": "Clientes u órdenes que llegan."
+      },
+      {
+        "label": "μ — servicio por servidor (por hora)",
+        "min": 1,
+        "max": 40,
+        "step": 1,
+        "value": 12,
+        "display": "12",
+        "help": "Cuántos atiende cada servidor."
+      },
+      {
+        "label": "c — número de servidores",
+        "min": 1,
+        "max": 10,
+        "step": 1,
+        "value": 3,
+        "display": "3",
+        "help": "Cajas, agentes, máquinas o muelles."
+      },
+      {
+        "label": "Capacidad etapa 1 (u/h)",
+        "min": 5,
+        "max": 80,
+        "step": 1,
+        "value": 40,
+        "display": "40",
+        "help": "Ritmo máximo del primer paso."
+      },
+      {
+        "label": "Capacidad etapa 2 (u/h)",
+        "min": 5,
+        "max": 80,
+        "step": 1,
+        "value": 30,
+        "display": "30",
+        "help": "Ritmo máximo del segundo paso."
+      },
+      {
+        "label": "Capacidad etapa 3 (u/h)",
+        "min": 5,
+        "max": 80,
+        "step": 1,
+        "value": 45,
+        "display": "45",
+        "help": "Ritmo máximo del tercer paso."
+      }
+    ],
+    "legend": [
+      {
+        "label": "Espera esperada (min)",
+        "color": "#ec3013"
+      },
+      {
+        "label": "Su punto de operación",
+        "color": "#201e1d"
+      }
+    ]
+  }
+}
