@@ -304,3 +304,36 @@ griega minúscula se convierte en `Ρ` mayúscula, visualmente idéntica a una `
 latina. El prototipo hace exactamente lo mismo (`text-transform: uppercase` y
 `.toUpperCase()` sobre la etiqueta del eje), así que se conservó tal cual. Si
 se prefiere ver `ρ`, basta con exceptuar esa etiqueta del `uppercase`.
+
+### 9.7 Publicación en Cloudflare Pages (y por qué la página salía en blanco)
+
+El contrato original apuntaba a Cloudflare Pages; la primera entrega se hizo a
+GitHub Pages y el `base` de Vite quedó fijo en `/gh-simulacionecoweb1/`. Al
+publicar después en Cloudflare, que sirve el sitio en la **raíz** de
+`<proyecto>.pages.dev`, el HTML seguía pidiendo
+`/gh-simulacionecoweb1/assets/index-*.js`: 404 en el JS y en el CSS, `#root`
+vacío y **página en blanco sin ningún error a la vista**.
+
+Es el modo de fallo típico de una SPA con el `base` equivocado, y no avisa: el
+documento carga con estado 200 y sólo fallan los assets.
+
+`vite.config.ts` ahora resuelve el caso solo:
+
+```ts
+const base = process.env.BASE_PATH ?? (process.env.CF_PAGES ? '/' : '/gh-simulacionecoweb1/')
+```
+
+Cloudflare define `CF_PAGES=1` en sus builds; GitHub Actions pasa `BASE_PATH`
+explícito. Ningún host necesita configuración manual, y `BASE_PATH` sigue
+mandando sobre ambos para un dominio propio.
+
+Además se añadió `public/_redirects` con `/* /index.html 200`, que es como
+Cloudflare hace el fallback SPA (el `404.html` del postbuild cubre lo mismo en
+GitHub Pages). Los dos archivos conviven sin estorbarse: cada host ignora el
+del otro.
+
+Verificado en Chromium sobre los dos builds: sirviendo `dist/` en la raíz con
+la regla de redirección, las seis rutas comprobadas montan la aplicación,
+dibujan sus gráficos y sus seis tarjetas, sin errores de red ni de JS; y el
+build por defecto sigue pasando la prueba de humo completa bajo
+`/gh-simulacionecoweb1/`.

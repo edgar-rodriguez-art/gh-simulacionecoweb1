@@ -1,0 +1,4 @@
+# Fallback SPA para Cloudflare Pages: cualquier ruta que no sea un archivo real
+# devuelve index.html con estado 200, para que /eoq o /colas funcionen al
+# recargar o al abrir un enlace compartido. Los demás hosts ignoran el archivo.
+/*    /index.html   200

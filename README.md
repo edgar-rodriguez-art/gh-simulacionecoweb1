@@ -53,9 +53,19 @@ npm run preview      # sirve el build
 npm run e2e          # prueba de humo en Chromium sobre el build
 ```
 
-`vite dev` y `vite build` publican bajo `/gh-simulacionecoweb1/` porque es la
-ruta que GitHub Pages asigna al repositorio. Para servir en la raíz de un
-dominio propio:
+### La ruta base
+
+Es el detalle que decide si el sitio se ve o queda en blanco: si el `base` no
+coincide con la carpeta donde se sirve, el HTML pide el JS bajo un prefijo que
+no existe, `#root` nunca se llena y la página aparece vacía **sin error
+visible**. Por eso el build lo resuelve solo:
+
+| Host | Se sirve en | `base` |
+| --- | --- | --- |
+| GitHub Pages | `usuario.github.io/gh-simulacionecoweb1/` | `/gh-simulacionecoweb1/` (por defecto) |
+| Cloudflare Pages | raíz de `proyecto.pages.dev` | `/` (detectado por `CF_PAGES`) |
+
+`BASE_PATH` manda sobre ambos, para un dominio propio u otro host:
 
 ```bash
 BASE_PATH=/ npm run build
@@ -109,13 +119,32 @@ horizontal a 390 px y que la consola queda limpia.
 
 ## Despliegue
 
-Cada push a `main` dispara `.github/workflows/deploy.yml`, que verifica tipos,
-corre las pruebas, construye y publica en GitHub Pages. El workflow copia
-`index.html` a `404.html` para que recargar `/eoq` o abrir un enlace compartido
-no dé 404 (GitHub Pages no reescribe rutas por sí solo).
+El proyecto publica igual en los dos hosts; sólo cambia el `base` y la forma
+de resolver el fallback de rutas.
 
-Para que el despliegue funcione, en **Settings → Pages** del repositorio la
-opción *Source* debe estar en **GitHub Actions**.
+### GitHub Pages
+
+Cada push a `main` dispara `.github/workflows/deploy.yml`, que verifica tipos,
+corre las pruebas, construye y publica. El workflow copia `index.html` a
+`404.html` para que recargar `/eoq` o abrir un enlace compartido no dé 404
+(GitHub Pages no reescribe rutas por sí solo).
+
+Para que funcione, en **Settings → Pages** del repositorio la opción *Source*
+debe estar en **GitHub Actions**.
+
+### Cloudflare Pages
+
+En **Workers & Pages → el proyecto → Settings → Build**:
+
+| Campo | Valor |
+| --- | --- |
+| Build command | `npm run build` |
+| Build output directory | `dist` |
+| Root directory | *(vacío)* |
+
+No hace falta configurar variables: Cloudflare define `CF_PAGES=1` en sus
+builds y `vite.config.ts` pone el `base` en `/` por eso. El fallback SPA lo da
+`public/_redirects` (`/* /index.html 200`), que se copia a `dist/` en el build.
 
 ## Origen del diseño
 
