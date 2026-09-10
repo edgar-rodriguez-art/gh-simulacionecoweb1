@@ -305,35 +305,66 @@ latina. El prototipo hace exactamente lo mismo (`text-transform: uppercase` y
 `.toUpperCase()` sobre la etiqueta del eje), así que se conservó tal cual. Si
 se prefiere ver `ρ`, basta con exceptuar esa etiqueta del `uppercase`.
 
-### 9.7 Publicación en Cloudflare Pages (y por qué la página salía en blanco)
+### 9.7 Publicación en Cloudflare (dos fallos encadenados)
 
-El contrato original apuntaba a Cloudflare Pages; la primera entrega se hizo a
-GitHub Pages y el `base` de Vite quedó fijo en `/gh-simulacionecoweb1/`. Al
-publicar después en Cloudflare, que sirve el sitio en la **raíz** de
-`<proyecto>.pages.dev`, el HTML seguía pidiendo
-`/gh-simulacionecoweb1/assets/index-*.js`: 404 en el JS y en el CSS, `#root`
-vacío y **página en blanco sin ningún error a la vista**.
+El contrato original apuntaba a Cloudflare Pages. La primera entrega se hizo a
+GitHub Pages y de ahí salieron dos problemas distintos al publicar en
+Cloudflare; conviene tenerlos separados porque el segundo sólo aparece cuando
+el primero está resuelto.
 
-Es el modo de fallo típico de una SPA con el `base` equivocado, y no avisa: el
-documento carga con estado 200 y sólo fallan los assets.
+**a) Página en blanco — el `base` de Vite.** Estaba fijo en
+`/gh-simulacionecoweb1/`, la subcarpeta que asigna GitHub Pages. Cloudflare
+sirve en la raíz del dominio, así que el HTML pedía
+`/gh-simulacionecoweb1/assets/index-*.js`: 404 en el JS y el CSS, `#root`
+vacío y **página en blanco sin ningún error visible** — el documento responde
+200 y sólo fallan los assets. Es el modo de fallo típico de una SPA con el
+`base` equivocado, y no avisa.
 
-`vite.config.ts` ahora resuelve el caso solo:
+**b) Despliegue rechazado — la regla de `_redirects`.** El primer intento de
+arreglo añadió `public/_redirects` con `/* /index.html 200`, que es como se
+hacía el fallback SPA en Pages clásico. La validación de assets lo rechaza:
 
-```ts
-const base = process.env.BASE_PATH ?? (process.env.CF_PAGES ? '/' : '/gh-simulacionecoweb1/')
+```
+Invalid _redirects configuration:
+Line 4: Infinite loop detected in this rule. This would cause a redirect to
+strip `.html` or `/index` and end up triggering this rule again. [code: 100324]
 ```
 
-Cloudflare define `CF_PAGES=1` en sus builds; GitHub Actions pasa `BASE_PATH`
-explícito. Ningún host necesita configuración manual, y `BASE_PATH` sigue
-mandando sobre ambos para un dominio propio.
+La plataforma ya normaliza `/index` y `.html`, de modo que esa regla se
+dispara a sí misma. El endpoint que devolvió el error
+(`/accounts/.../workers/scripts/.../versions`) además revela que el proyecto es
+un **Worker de assets estáticos**, no un proyecto de Pages.
 
-Además se añadió `public/_redirects` con `/* /index.html 200`, que es como
-Cloudflare hace el fallback SPA (el `404.html` del postbuild cubre lo mismo en
-GitHub Pages). Los dos archivos conviven sin estorbarse: cada host ignora el
-del otro.
+**Resolución.** El fallback SPA ahora lo declara `wrangler.jsonc`, que es el
+mecanismo propio de Workers con assets:
 
-Verificado en Chromium sobre los dos builds: sirviendo `dist/` en la raíz con
-la regla de redirección, las seis rutas comprobadas montan la aplicación,
-dibujan sus gráficos y sus seis tarjetas, sin errores de red ni de JS; y el
-build por defecto sigue pasando la prueba de humo completa bajo
-`/gh-simulacionecoweb1/`.
+```jsonc
+"assets": { "directory": "./dist", "not_found_handling": "single-page-application" }
+```
+
+Y la ruta base dejó de adivinarse. El intento anterior detectaba `CF_PAGES`,
+que **sólo existe en Cloudflare Pages**: Workers Builds no la define, así que
+esa heurística habría reproducido la página en blanco en cuanto se arreglara
+el `_redirects`. Ahora el defecto es `/` —correcto para Cloudflare, Netlify,
+Vercel o dominio propio— y GitHub Pages recibe su prefijo por `BASE_PATH`
+explícito desde el workflow. La regla general: la ruta base se declara donde
+se publica, no se deduce del entorno.
+
+**Verificación.** `wrangler deploy --dry-run` acepta la configuración (16
+archivos leídos de `dist/`). En Chromium, emulando `not_found_handling` con
+`dist/` en la raíz, las nueve rutas montan la aplicación por enlace directo,
+dibujan sus gráficos y sus seis tarjetas, y un enlace con parámetros
+(`/eoq?D=48000&S=1200`) restaura su escenario (EOQ 1,111 → 1,814) — 35
+comprobaciones sin errores de red ni de JS. Los dos builds, raíz y
+`/gh-simulacionecoweb1/`, pasan la prueba de humo completa y las 48 unitarias.
+
+Salvedad: la validación de `_redirects` ocurre en el servidor de Cloudflare, no
+en `wrangler --dry-run`, así que ese error concreto no se puede reproducir en
+local; la comprobación definitiva es el redespliegue.
+
+**Efecto colateral corregido.** Correr las dos configuraciones de `e2e`
+seguidas fallaba: el puerto del `preview` estaba fijo y la segunda corrida
+hablaba con el servidor de la primera, que servía otro `base`. Ahora el script
+pide un puerto libre al sistema y verifica que el HTML servido apunte a los
+assets del `base` que se está probando, de modo que un servidor ajeno no pase
+por bueno.

@@ -57,19 +57,30 @@ npm run e2e          # prueba de humo en Chromium sobre el build
 
 Es el detalle que decide si el sitio se ve o queda en blanco: si el `base` no
 coincide con la carpeta donde se sirve, el HTML pide el JS bajo un prefijo que
-no existe, `#root` nunca se llena y la página aparece vacía **sin error
-visible**. Por eso el build lo resuelve solo:
+no existe, `#root` nunca se llena y la página aparece vacía **sin ningún error
+a la vista** — el documento responde 200 y sólo fallan los assets.
+
+Por defecto es `/`, que sirve para casi cualquier host. El único caso especial
+es GitHub Pages, que publica en una subcarpeta:
 
 | Host | Se sirve en | `base` |
 | --- | --- | --- |
-| GitHub Pages | `usuario.github.io/gh-simulacionecoweb1/` | `/gh-simulacionecoweb1/` (por defecto) |
-| Cloudflare Pages | raíz de `proyecto.pages.dev` | `/` (detectado por `CF_PAGES`) |
+| Cloudflare Workers / Pages | raíz del dominio | `/` (por defecto) |
+| Netlify, Vercel, dominio propio | raíz del dominio | `/` (por defecto) |
+| GitHub Pages | `usuario.github.io/gh-simulacionecoweb1/` | `BASE_PATH` explícito |
 
-`BASE_PATH` manda sobre ambos, para un dominio propio u otro host:
+El workflow de GitHub Pages ya pasa `BASE_PATH` solo. Para reproducir ese
+build en local:
 
 ```bash
-BASE_PATH=/ npm run build
+BASE_PATH=/gh-simulacionecoweb1/ npm run build
+BASE_PATH=/gh-simulacionecoweb1/ npm run e2e
 ```
+
+No se detecta el host por variables de entorno: `CF_PAGES` sólo existe en
+Cloudflare **Pages**, y un mismo proveedor tiene productos distintos (Workers
+Builds no la define), así que adivinar es justo lo que produce el fallo en
+blanco. La ruta se declara donde se publica.
 
 ## Estructura
 
@@ -132,19 +143,36 @@ corre las pruebas, construye y publica. El workflow copia `index.html` a
 Para que funcione, en **Settings → Pages** del repositorio la opción *Source*
 debe estar en **GitHub Actions**.
 
-### Cloudflare Pages
+### Cloudflare
+
+`wrangler.jsonc` define un Worker de sólo assets estáticos: sin código de
+servidor, Cloudflare sirve `dist/` directamente.
+
+```jsonc
+"assets": {
+  "directory": "./dist",
+  "not_found_handling": "single-page-application"
+}
+```
+
+`not_found_handling` es el fallback SPA: cualquier ruta que no sea un archivo
+real (`/eoq`, `/colas`, …) devuelve `index.html` con estado 200.
 
 En **Workers & Pages → el proyecto → Settings → Build**:
 
 | Campo | Valor |
 | --- | --- |
 | Build command | `npm run build` |
-| Build output directory | `dist` |
+| Deploy command | `npx wrangler deploy` |
 | Root directory | *(vacío)* |
 
-No hace falta configurar variables: Cloudflare define `CF_PAGES=1` en sus
-builds y `vite.config.ts` pone el `base` en `/` por eso. El fallback SPA lo da
-`public/_redirects` (`/* /index.html 200`), que se copia a `dist/` en el build.
+No hace falta ninguna variable de entorno; si alguna vez se configuró
+`BASE_PATH` aquí, hay que borrarla.
+
+> **No usar `_redirects` con la regla `/* /index.html 200`.** La validación de
+> assets de Cloudflare la rechaza como bucle infinito (`code: 100324`): la
+> plataforma ya normaliza `/index` y `.html`, así que la regla se dispararía a
+> sí misma y el despliegue falla. Ese es el trabajo de `not_found_handling`.
 
 ## Origen del diseño
 

@@ -21,10 +21,28 @@ const CHROMIUM =
     (p) => existsSync(p),
   )
 
-const BASE_PATH = '/gh-simulacionecoweb1/'
-const PORT = 4177
+// Debe coincidir con el `base` que usó el build: `vite preview` sirve bajo esa
+// ruta. Por defecto la raíz; con BASE_PATH se prueba el build de GitHub Pages.
+const BASE_PATH = process.env.BASE_PATH ?? '/'
+
+// Puerto libre pedido al sistema: un puerto fijo hace que dos corridas
+// seguidas (o dos jobs de CI en la misma máquina) se pisen, y la segunda
+// acabe hablando con el `preview` de la primera, que sirve otro `base`.
+const PORT = await freePort()
 const ORIGIN = `http://127.0.0.1:${PORT}`
 const ROOT = ORIGIN + BASE_PATH
+
+async function freePort() {
+  const { createServer } = await import('node:net')
+  return new Promise((resolve, reject) => {
+    const srv = createServer()
+    srv.on('error', reject)
+    srv.listen(0, '127.0.0.1', () => {
+      const { port } = srv.address()
+      srv.close(() => resolve(port))
+    })
+  })
+}
 
 const ROUTES = [
   { path: '', name: 'Índice general', cards: 0 },
@@ -52,8 +70,19 @@ async function waitForServer(url, timeoutMs = 60000) {
   while (Date.now() < deadline) {
     try {
       const r = await fetch(url)
-      if (r.ok) return
-    } catch {
+      // Además de responder, el HTML debe apuntar a los assets bajo el `base`
+      // que se está probando: así un servidor ajeno en el puerto no pasa por
+      // bueno y se detecta un build hecho con otra ruta base.
+      if (r.ok) {
+        const html = await r.text()
+        if (html.includes(`${BASE_PATH}assets/`)) return
+        throw new Error(
+          `El servidor en ${url} no sirve el build con base "${BASE_PATH}". ` +
+            `Reconstruye con BASE_PATH="${BASE_PATH}" antes de correr las pruebas.`,
+        )
+      }
+    } catch (e) {
+      if (e instanceof Error && e.message.startsWith('El servidor')) throw e
       /* todavía no levanta */
     }
     await new Promise((r) => setTimeout(r, 300))

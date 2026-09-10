@@ -7,13 +7,13 @@ import path from 'node:path'
  * La ruta base depende de dónde se publique, y equivocarla deja la página en
  * blanco: el HTML pediría el JS bajo un prefijo que no existe.
  *
- *   Cloudflare Pages → raíz de <proyecto>.pages.dev            → '/'
- *   GitHub Pages     → subcarpeta github.io/<repo>/            → '/<repo>/'
- *
- * Cloudflare define CF_PAGES=1 en sus builds, así que el caso se detecta solo.
- * BASE_PATH manda sobre todo lo demás (dominio propio, otro host, `vite dev`).
+ * Por defecto la raíz, que es donde sirven casi todos los hosts (Cloudflare
+ * Workers, Cloudflare Pages, Netlify, Vercel, un dominio propio). El único
+ * caso especial es GitHub Pages, que publica en la subcarpeta /<repo>/, y su
+ * workflow pasa BASE_PATH explícito — no se adivina por variables de entorno,
+ * que cambian entre productos del mismo proveedor.
  */
-const base = process.env.BASE_PATH ?? (process.env.CF_PAGES ? '/' : '/gh-simulacionecoweb1/')
+const base = process.env.BASE_PATH ?? '/'
 
 export default defineConfig({
   base,

@@ -1,0 +1,19 @@
+{
+  // Worker de sólo assets estáticos: no hay código de servidor, Cloudflare
+  // sirve directamente el contenido de dist/.
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "gh-simulacionecoweb1",
+  "compatibility_date": "2026-09-10",
+  "assets": {
+    "directory": "./dist",
+
+    // Fallback SPA. Cualquier ruta que no corresponda a un archivo real
+    // (/eoq, /colas, …) devuelve index.html con estado 200, para que recargar
+    // o abrir un enlace compartido funcione.
+    //
+    // Esto reemplaza la regla `/* /index.html 200` de _redirects, que la
+    // validación de assets rechaza como bucle infinito: la plataforma ya
+    // normaliza `/index` y `.html`, así que esa regla se dispararía a sí misma.
+    "not_found_handling": "single-page-application"
+  }
+}
