@@ -1,7 +1,8 @@
 # SimulacionEcoWeb1
 
 Laboratorio web de **ocho simuladores interactivos** de economía, finanzas,
-inventarios, cadena de suministro y colas. Cada módulo corre con matemática
+inventarios, cadena de suministro y colas, más una **calculadora de ahorro e
+inversión** con interés compuesto. Cada módulo corre con matemática
 real en el navegador, se recalcula al mover cualquier parámetro y trae una
 pestaña de explicación con fórmulas, significado de cada parámetro, efectos
 observables y utilidad en los negocios.
@@ -9,7 +10,7 @@ observables y utilidad en los negocios.
 Sin backend, sin base de datos y sin cuenta de usuario: todo el cálculo ocurre
 en el cliente.
 
-## Los ocho módulos
+## Los nueve módulos
 
 | # | Ruta | Módulo | Área |
 | --- | --- | --- | --- |
@@ -22,6 +23,14 @@ en el cliente.
 | 06 | `/efecto-latigo` | Efecto látigo | Cadena |
 | 07 | `/beer-game` | Beer Game simplificado | Cadena |
 | 08 | `/colas` | Teoría de colas y cuellos de botella | Servicio |
+| 09 | `/calculadora-ahorro` | Calculadora de ahorro | Finanzas personales |
+
+La calculadora (09) es un widget propio, no un `Simulator<P>`: campos de texto
+sincronizados con sliders, perfiles de inversión, capitalización anual a
+diaria, aporte al inicio o fin de mes, incremento anual de la aportación,
+inflación, meta de ahorro (mes en que se alcanza y aportación necesaria),
+gráfico apilado con tooltip, escenarios «¿y si…?», tabla anual, descarga CSV y
+enlace para compartir. Su lógica pura vive en `src/lib/savings.ts`.
 
 Los parámetros de cada módulo se serializan en el query string, así que un
 escenario concreto se comparte copiando la URL:

@@ -1,7 +1,7 @@
 /**
  * Prueba de humo end-to-end sobre el build de producción.
  *
- * Levanta `vite preview`, recorre las nueve rutas con Chromium y verifica que
+ * Levanta `vite preview`, recorre las diez rutas con Chromium y verifica que
  * cada una renderiza sin errores de consola, que dibuja sus gráficos y sus seis
  * tarjetas de resultado, que la pestaña Explicación tiene contenido, que mover
  * un slider recalcula, que los botones del Beer Game avanzan la semana y que
@@ -54,6 +54,7 @@ const ROUTES = [
   { path: 'efecto-latigo', name: 'Efecto látigo', cards: 6 },
   { path: 'beer-game', name: 'Beer Game simplificado', cards: 6 },
   { path: 'colas', name: 'Teoría de colas y cuellos de botella', cards: 6 },
+  { path: 'calculadora-ahorro', name: 'Calculadora de ahorro', cards: 6 },
 ]
 
 const failures = []
@@ -134,7 +135,7 @@ try {
 
     if (route.path === '') {
       const links = await page.locator('main a[href]').count()
-      check(links === 8, 'la portada lista 8 tarjetas', 'encontradas ' + links)
+      check(links === 9, 'la portada lista 9 tarjetas', 'encontradas ' + links)
       continue
     }
 
@@ -209,7 +210,42 @@ try {
   check(colas.includes('saturado'), 'aparece el aviso de saturación')
   check(!colas.includes('NaN'), 'sin NaN en saturación')
 
-  /* ── 4. Navegación por la sidebar ───────────────────────────────────── */
+  /* ── 4. Calculadora de ahorro ───────────────────────────────────────── */
+  console.log('\n▸ Calculadora de ahorro — widget')
+  await page.goto(ROOT + 'calculadora-ahorro', { waitUntil: 'networkidle' })
+  const saldo = () => page.getByTestId('saldo-final').innerText()
+  const s0 = await saldo()
+  await page.getByLabel('Aportación mensual', { exact: true }).first().fill('5000')
+  await page.waitForTimeout(150)
+  check((await saldo()) !== s0, 'escribir una cifra recalcula el saldo')
+  check(page.url().includes('ap=5000'), 'la cifra escrita queda en la URL')
+  await page.getByRole('button', { name: /Agresivo/ }).click()
+  await page.waitForTimeout(150)
+  check(page.url().includes('r=13'), 'el perfil agresivo fija la tasa')
+  await page.getByRole('button', { name: 'Inicio de mes' }).click()
+  await page.waitForTimeout(150)
+  check(page.url().includes('t=inicio'), 'el momento de aportación queda en la URL')
+  check((await page.getByTestId('meta').innerText()).length > 0, 'muestra el estado de la meta')
+  await page.getByRole('button', { name: 'Ver tabla anual' }).click()
+  await page.waitForTimeout(150)
+  const rows = await page.locator('main table tbody tr').count()
+  check(rows === 20, 'la tabla anual tiene una fila por año', rows + ' filas')
+  await page.getByRole('button', { name: 'Pesos de hoy' }).click()
+  await page.waitForTimeout(150)
+  check(
+    (await page.locator('.recharts-surface').count()) >= 1,
+    'el gráfico en pesos de hoy se dibuja',
+  )
+  const [download] = await Promise.all([
+    page.waitForEvent('download'),
+    page.getByRole('button', { name: 'Descargar CSV' }).click(),
+  ])
+  check(download.suggestedFilename().endsWith('.csv'), 'descarga la tabla en CSV')
+  await page.getByRole('button', { name: 'Restablecer' }).click()
+  await page.waitForTimeout(150)
+  check((await saldo()) === s0, 'restablecer vuelve al escenario inicial')
+
+  /* ── 5. Navegación por la sidebar ───────────────────────────────────── */
   console.log('\n▸ Navegación')
   await page.goto(ROOT, { waitUntil: 'networkidle' })
   await page.getByRole('link', { name: /Efecto látigo/ }).first().click()
@@ -220,19 +256,21 @@ try {
     'el módulo destino renderiza',
   )
 
-  /* ── 5. Ruta inexistente ────────────────────────────────────────────── */
+  /* ── 6. Ruta inexistente ────────────────────────────────────────────── */
   await page.goto(ROOT + 'no-existe', { waitUntil: 'networkidle' })
   check((await page.locator('main').innerText()).includes('404'), 'una ruta inválida da la página 404')
 
-  /* ── 6. Ancho de teléfono ───────────────────────────────────────────── */
+  /* ── 7. Ancho de teléfono ───────────────────────────────────────────── */
   console.log('\n▸ Responsivo (390 px)')
   const phone = await context.newPage()
   await phone.setViewportSize({ width: 390, height: 844 })
-  await phone.goto(ROOT + 'eoq', { waitUntil: 'networkidle' })
-  const overflow = await phone.evaluate(
-    () => document.documentElement.scrollWidth - document.documentElement.clientWidth,
-  )
-  check(overflow <= 1, 'no hay scroll horizontal a 390 px', 'desborde ' + overflow + 'px')
+  for (const path of ['eoq', 'calculadora-ahorro']) {
+    await phone.goto(ROOT + path, { waitUntil: 'networkidle' })
+    const overflow = await phone.evaluate(
+      () => document.documentElement.scrollWidth - document.documentElement.clientWidth,
+    )
+    check(overflow <= 1, `no hay scroll horizontal a 390 px en /${path}`, 'desborde ' + overflow + 'px')
+  }
   check(
     await phone.getByRole('button', { name: 'Módulos' }).isVisible(),
     'la sidebar se convierte en menú superior',
@@ -244,7 +282,7 @@ try {
     'el menú superior se despliega',
   )
 
-  /* ── 7. Consola y red limpias ───────────────────────────────────────── */
+  /* ── 8. Consola y red limpias ───────────────────────────────────────── */
   console.log('\n▸ Consola y red')
   check(consoleErrors.length === 0, 'ningún error de consola', consoleErrors.slice(0, 5).join(' | '))
 

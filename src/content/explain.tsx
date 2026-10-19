@@ -435,4 +435,77 @@ export const EXPLAIN: Record<string, ReactNode> = {
       </p>
     </>
   ),
+
+  'calculadora-ahorro': (
+    <>
+      <h3>¿Qué hace esta simulación?</h3>
+      <p>
+        Planea un ahorro personal: parte de una inversión inicial, suma una aportación cada mes y
+        deja que el interés compuesto trabaje durante el plazo elegido. Muestra el saldo final, qué
+        parte es dinero propio y qué parte es interés, cuánto vale ese saldo en pesos de hoy, en
+        qué momento se alcanza una meta y cuánto habría que aportar al mes para lograrla a tiempo.
+      </p>
+      <h4>Fórmulas</h4>
+      <Formula>
+        Tasa mensual equivalente: i = (1 + r/m)^(m/12) − 1
+        <br />
+        Aporte al final del mes: Saldoₜ = Saldoₜ₋₁·(1 + i) + Aₜ
+        <br />
+        Aporte al inicio del mes: Saldoₜ = (Saldoₜ₋₁ + Aₜ)·(1 + i)
+        <br />
+        Aportación del año k: Aₖ = A·(1 + g)^(k−1) &nbsp;·&nbsp; Saldo real = Saldo / (1 + π)^n
+        <br />
+        Sin incrementos: FV = P₀·(1 + i)^N + A·[((1 + i)^N − 1) / i]
+      </Formula>
+      <h4>Parámetros</h4>
+      <ul>
+        <li>
+          <strong>Inversión inicial (P₀):</strong> el depósito de arranque. Es el dinero que más
+          tiempo pasa invirtiéndose, así que su efecto crece con el plazo.
+        </li>
+        <li>
+          <strong>Aportación mensual (A):</strong> el hábito de ahorro. En plazos cortos es la
+          variable que más pesa en el resultado.
+        </li>
+        <li>
+          <strong>Rendimiento anual (r):</strong> tasa nominal esperada. Los perfiles conservador,
+          moderado y agresivo son referencias ilustrativas, no promesas de rendimiento.
+        </li>
+        <li>
+          <strong>Capitalización (m):</strong> cuántas veces al año el interés se suma al capital.
+          A misma tasa nominal, capitalizar más seguido eleva la tasa efectiva anual.
+        </li>
+        <li>
+          <strong>Momento de la aportación:</strong> depositar al inicio del mes gana un mes más de
+          interés en cada aportación (anualidad anticipada).
+        </li>
+        <li>
+          <strong>Incremento anual (g):</strong> cuánto sube la aportación cada año, por ejemplo
+          al ritmo de los aumentos de sueldo.
+        </li>
+        <li>
+          <strong>Inflación (π):</strong> traduce el saldo futuro a poder de compra actual.
+        </li>
+        <li>
+          <strong>Meta:</strong> la cifra objetivo. Como el saldo final es lineal en la aportación,
+          la aportación necesaria se despeja de forma exacta.
+        </li>
+      </ul>
+      <h4>Efectos que se observan</h4>
+      <p>
+        Al principio casi todo el saldo es dinero aportado; con los años la franja roja de
+        intereses se ensancha hasta superar a las aportaciones. Empezar cinco años antes suele
+        valer más que subir la aportación, y un punto adicional de rendimiento sostenido durante
+        décadas cambia el resultado de forma notable. Con inflación cercana a la tasa, el saldo en
+        pesos de hoy apenas crece aunque la cifra nominal sí lo haga.
+      </p>
+      <h4>Utilidad en los negocios</h4>
+      <p>
+        Además del ahorro personal o para el retiro, el mismo cálculo dimensiona un fondo de
+        reposición de equipo, una reserva para un pago futuro o un plan de ahorro para empleados,
+        y permite comparar instrumentos con distinta tasa y capitalización sobre una base común.
+        Los resultados no consideran impuestos ni comisiones y suponen un rendimiento constante.
+      </p>
+    </>
+  ),
 }

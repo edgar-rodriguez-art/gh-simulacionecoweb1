@@ -2,20 +2,20 @@ import { Link } from 'react-router-dom'
 import { MODULES } from '@/content/modules'
 import { Badge } from '@/components/ui/badge'
 
-/** Portada: ocho tarjetas, una por módulo. */
+/** Portada: nueve tarjetas, una por módulo. */
 export default function Index() {
   return (
     <div className="flex flex-col gap-[24px]">
       <header className="flex max-w-[780px] flex-col gap-[8px]">
         <div className="text-[11px] font-extrabold tracking-[0.1em] text-[var(--color-accent-700)] uppercase">
-          Ocho módulos · uso libre
+          Nueve módulos · uso libre
         </div>
         <h1 className="m-0 text-[clamp(32px,4vw,46px)]">
           Ver el efecto antes de tomar la decisión
         </h1>
         <p className="max-w-[62ch] text-[16px] text-pretty">
           Ocho simulaciones interactivas de conceptos económicos, financieros, de inventarios,
-          cadena de suministro y colas. Mueva un parámetro y observe qué se mueve con él: precio de
+          cadena de suministro y colas, más una calculadora para planear su propio ahorro. Mueva un parámetro y observe qué se mueve con él: precio de
           equilibrio, costo total, faltantes, amplificación de pedidos, tiempo de espera. Cada
           módulo trae una pestaña de explicación con fórmulas, significado de parámetros y uso en el
           negocio.

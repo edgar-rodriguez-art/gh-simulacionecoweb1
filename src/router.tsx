@@ -5,7 +5,7 @@ import Index from '@/pages/Index'
 import NotFound from '@/pages/NotFound'
 
 /*
- * Los ocho simuladores se cargan bajo demanda: la portada no necesita
+ * Los nueve módulos se cargan bajo demanda: la portada no necesita
  * Recharts, así que el primer render entra con una fracción del bundle.
  */
 const OfertaDemanda = lazy(() => import('@/pages/OfertaDemanda'))
@@ -16,6 +16,7 @@ const Revision = lazy(() => import('@/pages/Revision'))
 const EfectoLatigo = lazy(() => import('@/pages/EfectoLatigo'))
 const BeerGame = lazy(() => import('@/pages/BeerGame'))
 const Colas = lazy(() => import('@/pages/Colas'))
+const CalculadoraAhorro = lazy(() => import('@/pages/CalculadoraAhorro'))
 
 /**
  * React Router en modo librería (sin SSR). Una ruta por simulador para poder
@@ -36,6 +37,7 @@ export const router = createBrowserRouter(
         { path: 'efecto-latigo', element: <EfectoLatigo /> },
         { path: 'beer-game', element: <BeerGame /> },
         { path: 'colas', element: <Colas /> },
+        { path: 'calculadora-ahorro', element: <CalculadoraAhorro /> },
         { path: '*', element: <NotFound /> },
       ],
     },

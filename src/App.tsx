@@ -10,7 +10,7 @@ const NAV: NavEntry[] = [
 ]
 
 /**
- * Shell de la aplicación: sidebar fija de 250 px con el índice y los ocho
+ * Shell de la aplicación: sidebar fija de 250 px con el índice y los nueve
  * módulos numerados, y el módulo activo en <Outlet/>. Por debajo de 700 px la
  * sidebar se convierte en un menú superior plegable.
  */

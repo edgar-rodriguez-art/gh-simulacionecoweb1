@@ -8,7 +8,7 @@ export default function NotFound() {
       </div>
       <h1 className="m-0 text-[clamp(28px,3.4vw,42px)]">Esa ruta no existe</h1>
       <p className="text-[15px]">
-        El laboratorio tiene ocho módulos. Vuelva al índice general y elija uno.
+        El laboratorio tiene nueve módulos. Vuelva al índice general y elija uno.
       </p>
       <Link to="/" className="text-[13px] font-extrabold tracking-[0.06em] uppercase">
         Ir al índice general →
